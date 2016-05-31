@@ -1,0 +1,9 @@
+F1:
+Repeat Vertical profile from previous day, again at A54, ~8am
+Battery failed on decent
+
+F2:
+Repeat Vertical profile from previous day, again at A54, ~8am
+Success
+
+F3: Crash survey - never got off the ground

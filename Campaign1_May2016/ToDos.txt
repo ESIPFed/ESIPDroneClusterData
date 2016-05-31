@@ -1,0 +1,29 @@
+
+#General
+ - Have a flight procedure check list
+ - Have a flight/experiment 'form' eg noting:
+    -- Dat&Time
+    -- Weather conditions general
+    -- Wind direction
+    -- Mission flight plan file
+    -- Mission data log file
+    -- Flight type: Survery/V_Profile/etc
+    -- Battery: Name, size, charge status
+    -- Vehicle
+    -- Sensor
+    -- Other ground based sesnor data available    
+-- Observations during flight (eg wind direction apparently different at higher altitude)
+    
+
+#Bar
+ - 
+
+#Jane
+ - Improve Error recovery in recording script
+ - Real time display of CO2 readings during flight (WiFi hub/GSM/Mavlink(preffered/other?)
+ - Have a means of unplugging Pi/CO2meter so they don't boot everytime you just want to talk to the Drone
+ - Print Pi and CO2Meter cases that close ports
+ - 'Neon' tagging
+ - Seek and find lost drone procedure 
+
+
