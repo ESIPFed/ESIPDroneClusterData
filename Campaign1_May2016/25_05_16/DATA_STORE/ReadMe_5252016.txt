@@ -1,0 +1,16 @@
+Read Me: 
+
+May 25th 2015
+Shelburne Farms Aerated Field from 9am-2pm.
+Bar and Jane
+
+Many lessons learned. 
+
+Flight 1 - hover in place ~25 meters - no mission (attempted vertical profile) - slight crash. 
+
+Flight 2 - up to 25m - horizontal over powerlines - down to 10 to start. Increment by ten move horizontally across the field 10-11 wavepoints (120 meters) -- over forest. 
+
+Flight 3 - vertical profile - 5m start up to 100m steps by 5 until 50m and then 10m 50-100. Back down same step-wise. (wavepoint 17 came back down to 25m accidentally) 
+Gentle crash / return home to ground at wavepoint 27 (approx 25m) -- we think because of battery 
+
+Flight 4 -- survey of field first at 5m (halfway through mission crash into ground) then at 10m. 

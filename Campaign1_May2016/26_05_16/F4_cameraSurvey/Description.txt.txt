@@ -1,0 +1,6 @@
+Middle of A field: A5
+Run survey at 100m
+Picture ever 6/s
+Flight speed: 3m/s
+
+Success
