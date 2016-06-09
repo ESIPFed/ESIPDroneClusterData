@@ -4,13 +4,14 @@ Reads in 1 or more CO2Meter profile logs and creates plots accordingly.  All com
 with multiple files
 """
 import csv
-import os
+import subprocess
 import argparse
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
 # Create pretty colours for plots
+#TODO reorder these in an order that places better displaying colours together
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
              (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
              (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
@@ -22,6 +23,39 @@ for i in range(len(tableau20)):
     r, g, b = tableau20[i]
     tableau20[i] = (r / 255., g / 255., b / 255.)
 
+def check_make(path,type):
+    """ Preforms the tedious process of checking is a file/directory exists and creating it if not.
+    :param path: path
+    :param type: file or directory
+    :return: 0 on success, 1 on failure
+    """
+
+
+    if type.lower() == "file":
+        try:
+            retcode = subprocess.call("touch {}".format(path), shell=True)
+            if retcode < 0:
+                print("Child was terminated by signal", -retcode, file=sys.stderr)
+            else: return 0
+
+        except OSError as e: print("Execution failed:", e, file=sys.stderr)
+
+    elif type.lower() == "directory":
+
+        try:
+            retcode = subprocess.call("mkdir {}".format(path), shell=True)
+            if retcode < 0:
+                print("Child was terminated by signal", -retcode, file=sys.stderr)
+            else: return 0
+
+        except OSError as e:
+            print("Execution failed:", e, file=sys.stderr)
+
+    else:
+        return 1
+
+
+
 
 def clean_log(afile):
     """ Remove all data lines where drone was not in AUTO mode
@@ -31,8 +65,9 @@ def clean_log(afile):
 
     with open(afile, newline='') as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',')
+        cfile=str(afile.split("/")[-1:][0])
 
-        with open(str("./temp/cleaned_" + afile), 'w', newline='') as cleaned:
+        with open(str("./temp/cleaned_" + cfile), 'w', newline='') as cleaned:
             csv_writer = csv.writer(cleaned)
             csv_writer.writerow(["CO2", "Altitude"])
 
@@ -63,11 +98,13 @@ def align_logs(afile, st_alt):
     :return: 0 on success, 1 on failure
     """
     seek_start = 0
-    with open("./temp/cleaned_" + afile, newline='') as csvfile:
+    cfile=str(afile.split("/")[-1:][0])
+
+    with open("./temp/cleaned_" + cfile, newline='') as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=',')
         next(csv_reader)
 
-        with open(str("./temp/aligned_" + afile), 'w', newline='') as aligned:
+        with open("./temp/aligned_" + cfile, 'w', newline='') as aligned:
             csv_writer = csv.writer(aligned)
             csv_writer.writerow(["CO2", "Altitude"])
 
@@ -155,15 +192,22 @@ def create_multiplot(files):
     plt.show()
 
 
-def make_plot(afile):
-    """Creates a profile plot from a single cleaned profile log"""
+def make_plot(afile,count):
+    """Creates a profile plot from a single cleaned profile log
+    :param afile    A source file containing aligned CO2 and Alt readings
+    :param count   The image number of this run
+    """
+
     # Pretty setup
     # These are the "Tableau 20" colors as RGB.
     c1 = tableau20[4]
     c2 = tableau20[18]
 
     # Read in CO2 and Alt
-    df = pd.read_csv(str(afile))
+    print("HERE")
+    print(afile)
+
+    df = pd.read_csv(afile)
     # print(list(df.columns.values))
     co = df['CO2']
     alt = df['Altitude']
@@ -197,7 +241,7 @@ def make_plot(afile):
     plt.yticks(fontsize=14)
     # plt.title("Vertical profile plot",color=tableau20[0])
     #TODO Check for overwriting
-    plt.savefig("./images/{}.png".format("_".join(afile.split("_")[1:])), bbox_inches="tight")
+    plt.savefig("./images/{}_{}.png".format(count,"_".join(afile.split("_")[1:])), bbox_inches="tight")
 
     # TODO add flag to turn this on and off
     plt.show()
@@ -208,7 +252,7 @@ def clean_up():
     Cleans up after script removing temporary files
     """
     print("Cleaning up")
-    os.system("rm -r ./temp/")
+    subprocess.call("rm -r ./temp/", shell=True)
 
 
 def main():
@@ -220,8 +264,6 @@ def main():
 
     # args parsing
     parser = argparse.ArgumentParser(description=__doc__)
-
-    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", help="A command is required")
     subparsers.required = True
 
@@ -238,6 +280,7 @@ def main():
     pa_parser.add_argument('st_alt', type=float,
                            help="(Required) Supply the GPS read altitude from which to trigger plotting in all "
                                 "supplied files ")
+
     pa_parser.add_argument("files", nargs='+', help="(Required) Supply paths to CO2meter csv log files")
 
     # Plot multi plot command
@@ -256,33 +299,44 @@ def main():
 
     args = parser.parse_args()
 
+
+
     # Command Selection
     if args.command == "plotcleaned":
-        os.system("mkdir ./temp")
-        os.system("mkdir ./images")
+        check_make("./temp","directory")
+        check_make("./images","directory")
+        i = range(len(args.files))
 
-        for f in args.files:
+        for f,i in zip(args.files,i):
             clean_log(f)
-            make_plot("./temp/cleaned_{}".format(f))
+            ffile="./temp/cleaned_{}".format(str(f.split("/")[-1:][0]))
+            make_plot(ffile,i)
+            # make_plot("./temp/cleaned_{}".format(cf[0]),i)
         return 0
 
     elif args.command == "plotaligned":
-        os.system("mkdir ./temp")
-        os.system("mkdir ./images")
-        for f in args.files:
+        check_make("./temp","directory")
+        check_make("./images","directory")
+        i = range(len(args.files))
+
+        for f,i in zip(args.files,i):
             clean_log(f)
             align_logs(f, args.st_alt)
-            make_plot("./temp/aligned_{}".format(f))
+            ffile="./temp/aligned_{}".format(str(f.split("/")[-1:][0]))
+            make_plot(ffile,i)
         return 0
 
     elif args.command == "plotmulti":
-        os.system("mkdir ./temp")
-        os.system("mkdir ./images")
+        check_make("./temp","directory")
+        check_make("./images","directory")
+
         aligned = []
         for f in args.files:
+            # for f in args.files:
             clean_log(f)
             align_logs(f, args.st_alt)
-            aligned.append("./temp/aligned_{}".format(f))
+            # aligned.append("./temp/aligned_{}".format(cf))
+            aligned.append("./temp/aligned_{}".format(str(f.split("/")[-1:][0])))
 
         create_multiplot(aligned)
         return 0
