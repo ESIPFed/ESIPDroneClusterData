@@ -204,9 +204,6 @@ def make_plot(afile,count):
     c2 = tableau20[18]
 
     # Read in CO2 and Alt
-    print("HERE")
-    print(afile)
-
     df = pd.read_csv(afile)
     # print(list(df.columns.values))
     co = df['CO2']
