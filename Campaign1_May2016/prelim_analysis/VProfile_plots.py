@@ -1,4 +1,3 @@
-
 """
 Reads in 1 or more CO2Meter profile logs and creates plots accordingly.  All comands except clean "-c" can be run
 with multiple files
@@ -11,12 +10,11 @@ import pandas as pd
 import sys
 
 # Create pretty colours for plots
-#TODO reorder these in an order that places better displaying colours together
-tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
-             (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
-             (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
-             (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
-             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
+tableau20 = [(31, 119, 180), (123, 102, 210), (44, 160, 44), (255, 152, 150)
+             (214, 39, 40), (23, 190, 207), (188, 189, 34), (127, 127, 127),
+             (220,95,189),(140, 86, 75), (174, 199, 232), (255, 127, 14),
+             (255, 187, 120),(152, 223, 138), (197, 176, 213),(196, 156, 148),
+             (247, 182, 210), (199, 199, 199), (219, 219, 141), (158, 218, 229)]
 
 # Scale the RGB values to the [0, 1] range, which is the format matplotlib accepts.
 for i in range(len(tableau20)):
@@ -170,7 +168,7 @@ def create_multiplot(files):
 
     x = range(max(lengths))
 
-    i = 13
+    i = 0
     for (co, l) in zip(CO2s, lables):
         x = range(len(co))
         ax1.plot(x, co, color=tableau20[i], label=l)
@@ -178,6 +176,7 @@ def create_multiplot(files):
         # ax1.plot(x, co, color=tableau20[i])
         i += 1
 
+    i = 0
     for (alt, l) in zip(Alts, lables):
         x = range(len(alt))
         ax2.plot(x, alt, color=tableau20[i], label=l, linestyle="--")
@@ -189,7 +188,7 @@ def create_multiplot(files):
     plt.savefig("./images/multiplot.png", bbox_inches="tight")
 
     # TODO add flag to turn this on and off
-    plt.show()
+    #plt.show()
 
 
 def make_plot(afile,count):
@@ -204,9 +203,6 @@ def make_plot(afile,count):
     c2 = tableau20[18]
 
     # Read in CO2 and Alt
-    print("HERE")
-    print(afile)
-
     df = pd.read_csv(afile)
     # print(list(df.columns.values))
     co = df['CO2']
@@ -244,7 +240,7 @@ def make_plot(afile,count):
     plt.savefig("./images/{}_{}.png".format(count,"_".join(afile.split("_")[1:])), bbox_inches="tight")
 
     # TODO add flag to turn this on and off
-    plt.show()
+    #plt.show()
 
 
 def clean_up():
