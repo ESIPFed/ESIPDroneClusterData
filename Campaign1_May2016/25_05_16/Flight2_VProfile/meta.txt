@@ -1,5 +1,5 @@
 #Date: 25-5-16
-#Site: Shelbourn field B
+#Site: Shelbourn field A
 #Description
 Takeoff to 120m
 move horizontally to get over power lines

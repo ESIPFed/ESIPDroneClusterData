@@ -1,4 +1,5 @@
-Middle of A field: A5
+Date: 26-5-16
+Site: Shelbourne field A
 30s @2m
 30s @3m
 30s @5m
@@ -12,4 +13,4 @@ Go up to 20m before returning home
 
 Battery failer at ¬50m - abort/crashed
 
-NOTE: This is a repeat of F2 with the horizontal transections removed
+NOTE: This is a repeat of Flight2 with the horizontal transections removed

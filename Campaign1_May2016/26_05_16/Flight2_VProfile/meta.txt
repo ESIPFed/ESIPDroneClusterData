@@ -1,4 +1,6 @@
-Middle of A field: A5
+#Date: 26-5-16
+#Site: Shelbourne field A
+#Description:
 30s @2m
 Traverse 10m horizontal
 30s @3m
